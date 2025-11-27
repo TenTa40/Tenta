@@ -1,0 +1,596 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>راهنمای ربات Highrise - تن تا</title>
+    <style>
+        /* Reset و فونت‌ها */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        @font-face {
+            font-family: 'Vazir';
+            src: url('fonts/Vazir.woff2') format('woff2');
+        }
+
+        body {
+            font-family: 'Vazir', 'Segoe UI', Tahoma, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #333;
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        /* استایل کانتینر اصلی */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* هدر */
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 30px;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+        }
+
+        .header h1 {
+            color: #4a5568;
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .header p {
+            color: #718096;
+            font-size: 1.1rem;
+        }
+
+        /* بخش‌های اصلی */
+        .section {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .section:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        .section-title {
+            color: #4a5568;
+            font-size: 1.8rem;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 3px solid #667eea;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .section-title i {
+            color: #667eea;
+        }
+
+        /* کارت‌های دستورات */
+        .commands-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 25px;
+            margin-top: 20px;
+        }
+
+        .command-card {
+            background: linear-gradient(135deg, #f8fafc, #e2e8f0);
+            border-radius: 15px;
+            padding: 25px;
+            border-left: 5px solid #667eea;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .command-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1));
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .command-card:hover::before {
+            opacity: 1;
+        }
+
+        .command-card:hover {
+            transform: translateX(10px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        .command-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 15px;
+        }
+
+        .command-name {
+            color: #2d3748;
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
+
+        .command-badge {
+            background: #667eea;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+        }
+
+        .command-badge.owner {
+            background: #e53e3e;
+        }
+
+        .command-badge.admin {
+            background: #ed8936;
+        }
+
+        .command-badge.user {
+            background: #38a169;
+        }
+
+        .command-description {
+            color: #4a5568;
+            margin-bottom: 15px;
+            line-height: 1.8;
+        }
+
+        .command-example {
+            background: #2d3748;
+            color: #e2e8f0;
+            padding: 15px;
+            border-radius: 10px;
+            font-family: 'Courier New', monospace;
+            direction: ltr;
+            text-align: left;
+            margin-top: 10px;
+            position: relative;
+        }
+
+        .command-example::before {
+            content: 'مثال:';
+            position: absolute;
+            top: -20px;
+            right: 0;
+            color: #718096;
+            font-size: 0.9rem;
+            font-family: 'Vazir';
+        }
+
+        /* فوتر */
+        .footer {
+            text-align: center;
+            margin-top: 50px;
+            padding: 30px;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 20px;
+            color: #718096;
+        }
+
+        .contact-info {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+
+        .contact-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 20px;
+            background: #f7fafc;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .contact-item:hover {
+            background: #667eea;
+            color: white;
+            transform: translateY(-3px);
+        }
+
+        /* دکمه کپی */
+        .copy-btn {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-family: 'Vazir';
+            margin-top: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .copy-btn:hover {
+            background: #5a67d8;
+            transform: scale(1.05);
+        }
+
+        /* انیمیشن‌ها */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .fade-in {
+            animation: fadeInUp 0.6s ease-out;
+        }
+
+        /* رسپانسیو */
+        @media (max-width: 768px) {
+            .commands-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .contact-info {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <!-- هدر -->
+        <header class="header fade-in">
+            <h1>🤖 راهنمای کامل ربات Highrise</h1>
+            <p>ربات هوشمند با قابلیت‌های پیشرفته برای اتاق‌های Highrise</p>
+            <div style="margin-top: 20px; display: flex; gap: 15px; justify-content: center; flex-wrap: wrap;">
+                <span style="background: #667eea; color: white; padding: 8px 16px; border-radius: 20px;">💃 رقص</span>
+                <span style="background: #ed8936; color: white; padding: 8px 16px; border-radius: 20px;">🎭 ایموت</span>
+                <span style="background: #38a169; color: white; padding: 8px 16px; border-radius: 20px;">💰 تیپ</span>
+                <span style="background: #9f7aea; color: white; padding: 8px 16px; border-radius: 20px;">📍 تلپورت</span>
+            </div>
+        </header>
+
+        <!-- بخش دستورات اصلی -->
+        <section class="section fade-in">
+            <h2 class="section-title"><i class="fas fa-star"></i> دستورات اصلی</h2>
+            <div class="commands-grid">
+                <div class="command-card">
+                    <div class="command-header">
+                        <span class="command-name">!help</span>
+                        <span class="command-badge user">همه کاربران</span>
+                    </div>
+                    <p class="command-description">نمایش راهنمای کامل ربات و دستورات موجود</p>
+                    <div class="command-example">!help</div>
+                    <button class="copy-btn" onclick="copyText('!help')">کپی دستور</button>
+                </div>
+
+                <div class="command-card">
+                    <div class="command-header">
+                        <span class="command-name">!status</span>
+                        <span class="command-badge user">همه کاربران</span>
+                    </div>
+                    <p class="command-description">نمایش وضعیت فعلی ربات و آمار</p>
+                    <div class="command-example">!status</div>
+                    <button class="copy-btn" onclick="copyText('!status')">کپی دستور</button>
+                </div>
+
+                <div class="command-card">
+                    <div class="command-header">
+                        <span class="command-name">!speaker</span>
+                        <span class="command-badge admin">ادمین</span>
+                    </div>
+                    <p class="command-description">روشن/خاموش کردن سیستم سخنگو</p>
+                    <div class="command-example">!speaker on</div>
+                    <button class="copy-btn" onclick="copyText('!speaker on')">کپی دستور</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- بخش موقعیت و تلپورت -->
+        <section class="section fade-in">
+            <h2 class="section-title"><i class="fas fa-map-marker-alt"></i> موقعیت و تلپورت</h2>
+            <div class="commands-grid">
+                <div class="command-card">
+                    <div class="command-header">
+                        <span class="command-name">!tp</span>
+                        <span class="command-badge user">همه کاربران</span>
+                    </div>
+                    <p class="command-description">تلپورت به موقعیت مشخص شده</p>
+                    <div class="command-example">!tp 5.5 2.0 8.3</div>
+                    <button class="copy-btn" onclick="copyText('!tp 5.5 2.0 8.3')">کپی دستور</button>
+                </div>
+
+                <div class="command-card">
+                    <div class="command-header">
+                        <span class="command-name">!mytp</span>
+                        <span class="command-badge user">همه کاربران</span>
+                    </div>
+                    <p class="command-description">ذخیره موقعیت فعلی کاربر</p>
+                    <div class="command-example">!mytp خانه</div>
+                    <button class="copy-btn" onclick="copyText('!mytp خانه')">کپی دستور</button>
+                </div>
+
+                <div class="command-card">
+                    <div class="command-header">
+                        <span class="command-name">!settp</span>
+                        <span class="command-badge admin">ادمین</span>
+                    </div>
+                    <p class="command-description">ذخیره موقعیت تلپورت عمومی یا ادمین</p>
+                    <div class="command-example">!settp ورودی</div>
+                    <button class="copy-btn" onclick="copyText('!settp ورودی')">کپی دستور</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- بخش رقص و ایموت -->
+        <section class="section fade-in">
+            <h2 class="section-title"><i class="fas fa-music"></i> رقص و ایموت</h2>
+            <div class="commands-grid">
+                <div class="command-card">
+                    <div class="command-header">
+                        <span class="command-name">رقص با عدد</span>
+                        <span class="command-badge user">همه کاربران</span>
+                    </div>
+                    <p class="command-description">شروع رقص با شماره (1 تا 230)</p>
+                    <div class="command-example">15</div>
+                    <button class="copy-btn" onclick="copyText('15')">کپی دستور</button>
+                </div>
+
+                <div class="command-card">
+                    <div class="command-header">
+                        <span class="command-name">!emote</span>
+                        <span class="command-badge user">همه کاربران</span>
+                    </div>
+                    <p class="command-description">اجرای ایموت برای خود یا کاربر دیگر</p>
+                    <div class="command-example">!emote wave @username</div>
+                    <button class="copy-btn" onclick="copyText('!emote wave')">کپی دستور</button>
+                </div>
+
+                <div class="command-card">
+                    <div class="command-header">
+                        <span class="command-name">!stopdance</span>
+                        <span class="command-badge user">همه کاربران</span>
+                    </div>
+                    <p class="command-description">توقف رقص فعلی کاربر</p>
+                    <div class="command-example">!stopdance</div>
+                    <button class="copy-btn" onclick="copyText('!stopdance')">کپی دستور</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- بخش واکنش‌ها -->
+        <section class="section fade-in">
+            <h2 class="section-title"><i class="fas fa-heart"></i> واکنش‌ها</h2>
+            <div class="commands-grid">
+                <div class="command-card">
+                    <div class="command-header">
+                        <span class="command-name">!heart</span>
+                        <span class="command-badge user">همه کاربران</span>
+                    </div>
+                    <p class="command-description">ارسال قلب به کاربر یا همه</p>
+                    <div class="command-example">!heart @username 5</div>
+                    <button class="copy-btn" onclick="copyText('!heart @username')">کپی دستور</button>
+                </div>
+
+                <div class="command-card">
+                    <div class="command-header">
+                        <span class="command-name">!allheart</span>
+                        <span class="command-badge user">همه کاربران</span>
+                    </div>
+                    <p class="command-description">ارسال قلب به همه کاربران</p>
+                    <div class="command-example">!allheart 3</div>
+                    <button class="copy-btn" onclick="copyText('!allheart 3')">کپی دستور</button>
+                </div>
+
+                <div class="command-card">
+                    <div class="command-header">
+                        <span class="command-name">!clap</span>
+                        <span class="command-badge user">همه کاربران</span>
+                    </div>
+                    <p class="command-description">دست زدن برای کاربر مشخص</p>
+                    <div class="command-example">!clap @username</div>
+                    <button class="copy-btn" onclick="copyText('!clap @username')">کپی دستور</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- بخش تیپ و اقتصاد -->
+        <section class="section fade-in">
+            <h2 class="section-title"><i class="fas fa-coins"></i> تیپ و اقتصاد</h2>
+            <div class="commands-grid">
+                <div class="command-card">
+                    <div class="command-header">
+                        <span class="command-name">!tip</span>
+                        <span class="command-badge user">همه کاربران</span>
+                    </div>
+                    <p class="command-description">ارسال تیپ به کاربر دیگر</p>
+                    <div class="command-example">!tip @username 100</div>
+                    <button class="copy-btn" onclick="copyText('!tip @username 100')">کپی دستور</button>
+                </div>
+
+                <div class="command-card">
+                    <div class="command-header">
+                        <span class="command-name">!tipall</span>
+                        <span class="command-badge user">همه کاربران</span>
+                    </div>
+                    <p class="command-description">تیپ به همه کاربران اتاق</p>
+                    <div class="command-example">!tipall 50</div>
+                    <button class="copy-btn" onclick="copyText('!tipall 50')">کپی دستور</button>
+                </div>
+
+                <div class="command-card">
+                    <div class="command-header">
+                        <span class="command-name">!tiplb</span>
+                        <span class="command-badge user">همه کاربران</span>
+                    </div>
+                    <p class="command-description">نمایش لیدربورد تیپ</p>
+                    <div class="command-example">!tiplb</div>
+                    <button class="copy-btn" onclick="copyText('!tiplb')">کپی دستور</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- بخش مدیریت -->
+        <section class="section fade-in">
+            <h2 class="section-title"><i class="fas fa-crown"></i> مدیریت</h2>
+            <div class="commands-grid">
+                <div class="command-card">
+                    <div class="command-header">
+                        <span class="command-name">!addadmin</span>
+                        <span class="command-badge owner">مالک</span>
+                    </div>
+                    <p class="command-description">افزودن کاربر به لیست ادمین‌ها</p>
+                    <div class="command-example">!addadmin @username</div>
+                    <button class="copy-btn" onclick="copyText('!addadmin @username')">کپی دستور</button>
+                </div>
+
+                <div class="command-card">
+                    <div class="command-header">
+                        <span class="command-name">!autotip</span>
+                        <span class="command-badge owner">مالک</span>
+                    </div>
+                    <p class="command-description">فعال/غیرفعال کردن تیپ خودکار</p>
+                    <div class="command-example">!autotip on</div>
+                    <button class="copy-btn" onclick="copyText('!autotip on')">کپی دستور</button>
+                </div>
+
+                <div class="command-card">
+                    <div class="command-header">
+                        <span class="command-name">!ns</span>
+                        <span class="command-badge admin">ادمین</span>
+                    </div>
+                    <p class="command-description">نمایش اطلاعات سرور</p>
+                    <div class="command-example">!ns</div>
+                    <button class="copy-btn" onclick="copyText('!ns')">کپی دستور</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- فوتر -->
+        <footer class="footer fade-in">
+            <h3>📞 ارتباط با سازنده</h3>
+            <p>برای دریافت ربات رایگان یا راهنمایی بیشتر با ما در تماس باشید</p>
+            <div class="contact-info">
+                <div class="contact-item">
+                    <i class="fab fa-telegram"></i>
+                    <span>@TenTa11</span>
+                </div>
+                <div class="contact-item">
+                    <i class="fab fa-telegram"></i>
+                    <span>کانال: @TenTa11</span>
+                </div>
+            </div>
+            <p style="margin-top: 20px; color: #a0aec0;">🤖 ربات هوشمند Highrise - توسعه داده شده توسط تن تا</p>
+        </footer>
+    </div>
+
+    <script>
+        // تابع کپی متن
+        function copyText(text) {
+            navigator.clipboard.writeText(text).then(function() {
+                // نمایش اعلان موفقیت
+                showNotification('✅ دستور با موفقیت کپی شد: ' + text);
+            }).catch(function(err) {
+                console.error('خطا در کپی: ', err);
+            });
+        }
+
+        // نمایش اعلان
+        function showNotification(message) {
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: #38a169;
+                color: white;
+                padding: 15px 25px;
+                border-radius: 10px;
+                box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+                z-index: 1000;
+                font-family: Vazir;
+                animation: slideIn 0.3s ease;
+            `;
+            notification.textContent = message;
+            document.body.appendChild(notification);
+
+            setTimeout(() => {
+                notification.style.animation = 'slideOut 0.3s ease';
+                setTimeout(() => {
+                    document.body.removeChild(notification);
+                }, 300);
+            }, 3000);
+        }
+
+        // اضافه کردن استایل انیمیشن برای اعلان
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes slideIn {
+                from { transform: translateX(100%); opacity: 0; }
+                to { transform: translateX(0); opacity: 1; }
+            }
+            @keyframes slideOut {
+                from { transform: translateX(0); opacity: 1; }
+                to { transform: translateX(100%); opacity: 0; }
+            }
+        `;
+        document.head.appendChild(style);
+
+        // انیمیشن اسکرول
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.animation = 'fadeInUp 0.6s ease-out forwards';
+                }
+            });
+        }, observerOptions);
+
+        // مشاهده تمام بخش‌ها برای انیمیشن
+        document.querySelectorAll('.section').forEach(section => {
+            observer.observe(section);
+        });
+    </script>
+</body>
+</html>
